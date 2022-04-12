@@ -19,8 +19,8 @@ module.exports = (env, argv) => {
         devServer: {
             compress: true,
             static: {
-				directory: path.resolve(__dirname, './static'),
-				publicPath: '/static'
+				directory: path.resolve(__dirname, './assets'),
+				publicPath: '/assets'
 			},
             client: {
                 logging: "warn",
@@ -74,7 +74,7 @@ module.exports = (env, argv) => {
             // Copy our static assets to the final build
             new CopyPlugin({
                 patterns: [
-				{ from: 'static/', to: 'static/'},
+				{ from: 'assets/', to: 'assets/'},
 				{ from: 'styling/', to: 'styling/'}
 				],
             }),
