@@ -1,0 +1,45 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "import",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "linebreak-style": "off",
+    "max-len": 0,
+    "no-continue": 0,
+    "no-empty-function": ["error",{"allow":["constructors"]}],
+    "no-new": 0,
+    "no-plusplus": 0,
+    "no-tabs": [1, {"allowIndentationTabs": true}],
+    "no-trailing-spaces" : 0,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": 0,
+    "no-useless-constructor": 0,
+    "object-curly-spacing": 0,
+    "padded-blocks": [0,{ "classes": "always", "blocks": "never" }],
+    "prefer-promise-reject-errors": 0,
+    "space-before-function-paren": 0,
+    "brace-style": [1, "allman", { "allowSingleLine":  true }],
+    "class-methods-use-this": 0,
+    "dot-notation": 0,
+    "eol-last": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": ["error", {"js": "never","ts": "never"}],
+    "implicit-arrow-linebreak": 0,
+    "quotes": [2, "single", { "avoidEscape":  true}],
+    "indent": [2, "tab", {
+      "CallExpression": {"arguments": 2},
+      "FunctionDeclaration":  {"body":  1, "parameters":  2},
+      "MemberExpression": 2,
+      "SwitchCase": 1,
+      "ignoredNodes": ["ConditionalExpression"]
+    }]
+  }
+}
