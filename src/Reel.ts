@@ -9,7 +9,8 @@ export default class Reel extends Container {
 	reelNumber: number;
 	core: Core;
 
-	constructor (core: Core, reelId: number) {
+	constructor (core: Core, reelId: number)
+	{
 		super();
 		this.core = core;
 		this.reelResult = core.generateNewReelResult();
@@ -18,7 +19,8 @@ export default class Reel extends Container {
 		this.reelNumber = reelId;
 	}
 
-	private populateInitialSymbols(): void {
+	private populateInitialSymbols(): void
+	{
 		for (let i = 0; i < 3; i++) {
 			const symbol: Sprite = new Sprite(this.getReelSymbolTexture(i));
 			this.positionAndAnchorSymbol(symbol, i);
@@ -27,8 +29,10 @@ export default class Reel extends Container {
 		}
 	}
 
-	private populateNewSymbols(): void {
-		for (let i = 0; i < 3; i++) {
+	private populateNewSymbols(): void
+	{
+		for (let i = 0; i < 3; i++)
+		{
 			const symbol: Sprite = new Sprite(this.getReelSymbolTexture(i));
 			this.positionAndAnchorSymbol(symbol, i);
 			this.positionAsNewSymbol(symbol);
@@ -37,56 +41,52 @@ export default class Reel extends Container {
 		}
 	}
 
-	private positionAsNewSymbol(symbol: Sprite)
+	private positionAsNewSymbol(symbol: Sprite): void
 	{
 		symbol.position.y -= this.core.getApp().renderer.height;
-		//symbol.rotation = Math.random()*720-360;
 	}
 
-	private positionAndAnchorSymbol(symbol: Sprite, i: number):void {
+	private positionAndAnchorSymbol(symbol: Sprite, i: number):void
+	{
 		symbol.anchor.set(0.5);
 		symbol.x = symbol.height * 0.5;
 		symbol.position.y = ((i + 1) * symbol.height) - (symbol.height / 2);
 	}
 
-	private getReelSymbolTexture(index: number): Texture {
+	private getReelSymbolTexture(index: number): Texture
+	{
 		const symbolNum = this.reelResult[index];
 		const atlasTextures: any = Loader.shared.resources['atlas'].textures;
 		return atlasTextures[`symbols/symbol_${symbolNum}.png`];
 	}
 
-	public animateCurrentSymbolsOut()
+	public animateCurrentSymbolsOut(): void
 	{
-		const timeline = gsap.timeline({onComplete: () => {
-			this.clearOldSymbols();
-			this.reelResult = this.core.generateNewReelResult();
-			this.animateNewSymbolsIn();
-		}});
-		timeline.pause();
+		const timeline = gsap.timeline({onComplete: this.clearOldSymbolsAndCreateNewOnes.bind(this)});
 		this.symbols.forEach((symbol) =>
 		{
 			timeline.to(symbol, {
-				delay: 0.1+(0.05*this.reelNumber),
+				delay: 0.1 + (0.025 * this.reelNumber),
 				duration: 0.3,
 				y: this.core.getApp().renderer.height + symbol.height,
 				ease: Power1.easeIn,
 			});
 		});
-		timeline.play();
+
 	}
 
-	private animateNewSymbolsIn()
+	private clearOldSymbolsAndCreateNewOnes(): void
 	{
+		this.clearOldSymbols();
+		this.reelResult = this.core.generateNewReelResult();
 		this.populateNewSymbols();
-		const timeline = gsap.timeline({onComplete: () => {
-			if (this.reelNumber === (this.core.getNumReels()-1))
-			{
-				this.core.resetSpinButton();
-			}
-		}});
-		timeline.pause();
-		this.symbols.reverse();
-		this.symbols.forEach((symbol) =>
+		this.animateNewSymbolsIn();
+	}
+
+	private animateNewSymbolsIn(): void
+	{
+		const timeline = gsap.timeline({onComplete: this.checkIfLastReelAndResetButtonState.bind(this)});
+		this.symbols.reverse().forEach((symbol) =>
 		{
 			timeline.to(symbol, {
 				delay: 0.1+(0.05*this.reelNumber),
@@ -95,15 +95,28 @@ export default class Reel extends Container {
 				angle: 0,
 				ease: Power1.easeInOut,
 				onComplete: () => {
-					const id = Math.floor(Math.random() * 5 + 1);
-					this.core.getHowl().play('Reel_Stop_' + id);
+					this.playRandomReelStopSound();
 				},
 			}, '<50%');
 		});
-		timeline.play();
+
 	}
 
-	private clearOldSymbols()
+	private checkIfLastReelAndResetButtonState(): void
+	{
+		if (this.reelNumber === (this.core.getNumReels() - 1))
+		{
+			this.core.resetSpinButton();
+		}
+	}
+
+	private playRandomReelStopSound(): void
+	{
+		const id = Math.floor(Math.random() * 5 + 1);
+		this.core.getHowl().play('Reel_Stop_' + id);
+	}
+
+	private clearOldSymbols(): void
 	{
 		this.symbols.forEach((symbol) =>
 		{

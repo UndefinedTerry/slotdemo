@@ -10,9 +10,9 @@ export default class Core
 	private numUniqueSymbols = 8;
 	private numReels = 5;
 
-	private app: Application;
+	private readonly app: Application;
 	private loader: Loader = Loader.shared;
-	private howl: Howl;
+	private readonly howl: Howl;
 	private reelsArray: Array<Reel> = [];
 	private reelsContainer: Container = new Container;
 	private spinButton: SpinButton | any;
@@ -24,27 +24,26 @@ export default class Core
 		this.howl.once('load', this.loadTextures.bind(this));
 	}
 
-	public updateCore(): void
-	{
-		// Core update
-	}
-
 	public getApp(): Application {return this.app;}
 	public getNumUniqueSymbols(): number {return this.numUniqueSymbols;}
 	public getNumReels(): number {return this.numReels;}
-	public getHowl():Howl {return this.howl;}
+	public getHowl(): Howl {return this.howl;}
+	public resetSpinButton(): void {this.spinButton.setIsEnabled(true);}
 
-	private loadTextures(): void {
+	private loadTextures(): void
+	{
 		this.loader.add('atlas', '../assets/images/atlas.json').load(this.onAssetsLoaded.bind(this));
 	}
 
-	private onAssetsLoaded() {
+	private onAssetsLoaded(): void
+	{
 		this.createInitialReels();
 		this.createSpinButton();
 	}
 
-	private createInitialReels(): void {
-		for (let i = 0; i < 5; i++)
+	private createInitialReels(): void
+	{
+		for (let i = 0; i < this.numReels; i++)
 		{
 			const newReel = new Reel(this, i);
 			this.reelsArray.push(newReel);
@@ -53,7 +52,8 @@ export default class Core
 		this.scaleAndAddReelsContainer();
 	}
 
-	private scaleAndAddReelsContainer(): void {
+	private scaleAndAddReelsContainer(): void
+	{
 		this.reelsContainer.scale.set((this.app.renderer.width / this.reelsContainer.width));
 		this.app.stage.addChild(this.reelsContainer);
 		this.reelsContainer.mask = this.createReelsMask();
@@ -100,9 +100,5 @@ export default class Core
 		this.reelsArray.forEach((reel) => {
 			reel.animateCurrentSymbolsOut();
 		})
-	}
-
-	public resetSpinButton() {
-		this.spinButton.setIsEnabled(true);
 	}
 }

@@ -1,8 +1,6 @@
 import {Application} from 'pixi.js';
-import {Actions} from 'pixi-actions';
-import Core from './Core'
 
-let core: Core;
+import Core from './Core'
 
 const GAME_WIDTH = 1024;
 const GAME_HEIGHT = 768;
@@ -19,7 +17,5 @@ const app = new Application({
 
 window.onload = () =>
 {
-	core = new Core(app);
-	app.ticker.add(()=>{core.updateCore()});
-	app.ticker.add((delta) => Actions.tick(delta / 60));
+	new Core(app);
 }
