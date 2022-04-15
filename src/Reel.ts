@@ -19,6 +19,28 @@ export default class Reel extends Container {
 		this.reelNumber = reelId;
 	}
 
+	public animateCurrentSymbolsOut(): void
+	{
+		// Drops away all the current symbols, then moves the chain along the chain
+		const timeline = gsap.timeline({onComplete: this.clearOldSymbolsAndCreateNewOnes.bind(this)});
+
+		// Little randomization to order the tiles drop away
+		if (Math.random() > 0.49)
+			this.symbols.reverse();
+
+		this.symbols.forEach((symbol) =>
+		{
+			timeline.to(symbol, {
+				delay: 0.1 + (0.025 * this.reelNumber),
+				duration: 0.3,
+				rotation: (Math.random()-Math.random()), // Slight rotation for visual collapse feel
+				y: this.core.getApp().renderer.height + symbol.height,
+				ease: Power1.easeIn,
+			}, '<25%');
+		});
+
+	}
+
 	private populateInitialSymbols(): void
 	{
 		for (let i = 0; i < 3; i++) {
@@ -58,29 +80,6 @@ export default class Reel extends Container {
 		const symbolNum = this.reelResult[index];
 		const atlasTextures: any = Loader.shared.resources['atlas'].textures;
 		return atlasTextures[`symbols/symbol_${symbolNum}.png`];
-	}
-
-
-	public animateCurrentSymbolsOut(): void
-	{
-		// Drops away all the current symbols, then moves the chain along the chain
-		const timeline = gsap.timeline({onComplete: this.clearOldSymbolsAndCreateNewOnes.bind(this)});
-
-		// Little randomization to order the tiles drop away
-		if (Math.random() > 0.49)
-			this.symbols.reverse();
-
-		this.symbols.forEach((symbol) =>
-		{
-			timeline.to(symbol, {
-				delay: 0.1 + (0.025 * this.reelNumber),
-				duration: 0.3,
-				rotation: (Math.random()-Math.random()), // Slight rotation for visual collapse feel
-				y: this.core.getApp().renderer.height + symbol.height,
-				ease: Power1.easeIn,
-			}, '<25%');
-		});
-
 	}
 
 	private clearOldSymbolsAndCreateNewOnes(): void

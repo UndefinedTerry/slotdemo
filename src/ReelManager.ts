@@ -13,6 +13,8 @@ export default class ReelManager {
 		this.core = core;
 	}
 
+	public getReelsArray(): Array<Reel> {return this.reelsArray;}
+
 	public createInitialReels(): void
 	{
 		for (let i = 0; i < this.core.getNumReels(); i++)
@@ -24,7 +26,16 @@ export default class ReelManager {
 		this.scaleAndAddReelsContainer();
 	}
 
-	public getReelsArray(): Array<Reel> {return this.reelsArray;}
+	public generateNewReelResult(): Array<number>
+	{
+		// Just generate 3 new random numbers
+		const newReelResult: Array<number> = [];
+		for (let i = 0; i < 3; i++)
+		{
+			newReelResult.push(Math.floor(Math.random() * this.core.getNumUniqueSymbols() + 1));
+		}
+		return newReelResult;
+	}
 
 	private scaleAndAddReelsContainer(): void
 	{
@@ -43,17 +54,6 @@ export default class ReelManager {
 		mask.endFill();
 		mask.cacheAsBitmap = true;
 		return mask;
-	}
-
-	public generateNewReelResult(): Array<number>
-	{
-		// Just generate 3 new random numbers
-		const newReelResult: Array<number> = [];
-		for (let i = 0; i < 3; i++)
-		{
-			newReelResult.push(Math.floor(Math.random() * this.core.getNumUniqueSymbols() + 1));
-		}
-		return newReelResult;
 	}
 
 }

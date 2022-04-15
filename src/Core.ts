@@ -15,7 +15,7 @@ export default class Core
 
 	private readonly app: Application;
 	private readonly howl: Howl;
-	private reelManager: ReelManager;
+	private readonly reelManager: ReelManager;
 	private spinButtonManager: SpinButtonManager;
 
 	constructor(app: Application)
