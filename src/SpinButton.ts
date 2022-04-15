@@ -28,6 +28,16 @@ export default class SpinButton extends Sprite {
 		this.setAsNormal();
 	}
 
+	public setAsDisabled(): void {this.texture = this.disabledTexture; this.textLabel.text = ''; this.alpha = 0.5;}
+	public setAsNormal(): void {this.texture = this.normalTexture; this.textLabel.text = 'Spin'; this.alpha = 1;}
+	public setAsHover(): void {this.texture = this.hoverTexture;}
+	public setAsPressed(): void {this.texture = this.pressedTexture;}
+	public getIsEnabled(): boolean {return this.isEnabled;}
+	public setIsEnabled(state: boolean): void {
+		this.isEnabled = state;
+		!state ? this.setAsDisabled() : this.setAsNormal();
+	}
+
 	private setupButtonParameters(): void
 	{
 		this.isEnabled = true;
@@ -42,17 +52,7 @@ export default class SpinButton extends Sprite {
 		this.on('pointerout', () =>{if (this.isEnabled) this.setAsNormal();});
 	}
 
-	public setAsDisabled() {this.texture = this.disabledTexture; this.textLabel.text = ''; this.alpha = 0.5;}
-	public setAsNormal() {this.texture = this.normalTexture; this.textLabel.text = 'Spin'; this.alpha = 1;}
-	public setAsHover() {this.texture = this.hoverTexture;}
-	public setAsPressed() {this.texture = this.pressedTexture;}
-	public getIsEnabled() {return this.isEnabled;}
-	public setIsEnabled(state: boolean) {
-		this.isEnabled = state;
-		!state ? this.setAsDisabled() : this.setAsNormal();
-	}
-
-	private createAndPositionTextOverlay()
+	private createAndPositionTextOverlay(): void
 	{
 		this.textLabel.text = 'Spin';
 		this.textLabel.anchor.set(0.5);
