@@ -104,7 +104,7 @@ export default class Reel extends Container {
 				angle: 0,
 				ease: Power1.easeInOut,
 				onComplete: () => {
-					this.playReelStopSound();
+					this.core.getHowl().play(`Reel_Stop_${this.reelNumber+1}`);
 				},
 			}, '<200%');
 		});
@@ -118,11 +118,6 @@ export default class Reel extends Container {
 		{
 			this.core.resetSpinButton();
 		}
-	}
-
-	private playReelStopSound(): void
-	{
-		this.core.getHowl().play('Reel_Stop_' + (this.reelNumber+1));
 	}
 
 	private clearOldSymbols(): void
