@@ -1,0 +1,19 @@
+{
+    "dropShadow": true,
+    "dropShadowBlur": 5,
+    "dropShadowColor": "#0d0d0d",
+    "dropShadowDistance": 3,
+    "fill": [
+        "#ffa200",
+        "#ffc800",
+        "#fbff0a"
+    ],
+    "fillGradientType": 1,
+    "fillGradientStops": [
+        0
+    ],
+    "fontFamily": "Impact",
+    "fontSize": 42,
+    "miterLimit": 8,
+    "strokeThickness": 4
+}
