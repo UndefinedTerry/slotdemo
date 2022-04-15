@@ -39,7 +39,7 @@ export default class Core
 	private loadTextures(): void
 	{
 		// Load texture atlas then initialize
-		this.loader.add('atlas', '../assets/images/atlas.json').load(this.onAssetsLoaded.bind(this));
+		this.loader.add('atlas', 'assets/images/atlas.json').load(this.onAssetsLoaded.bind(this));
 	}
 
 	private onAssetsLoaded(): void
