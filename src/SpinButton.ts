@@ -25,6 +25,7 @@ export default class SpinButton extends Sprite {
 		this.setupButtonParameters();
 		this.createAndPositionTextOverlay();
 		this.createEventListeners();
+		this.setAsNormal();
 	}
 
 	private setupButtonParameters(): void

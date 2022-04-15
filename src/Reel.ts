@@ -13,7 +13,7 @@ export default class Reel extends Container {
 	{
 		super();
 		this.core = core;
-		this.reelResult = core.generateNewReelResult();
+		this.reelResult = core.getReelManager().generateNewReelResult();
 		this.populateInitialSymbols();
 		this.position.x = reelId * this.width;
 		this.reelNumber = reelId;
@@ -60,31 +60,41 @@ export default class Reel extends Container {
 		return atlasTextures[`symbols/symbol_${symbolNum}.png`];
 	}
 
+
 	public animateCurrentSymbolsOut(): void
 	{
+		// Drops away all the current symbols, then moves the chain along the chain
 		const timeline = gsap.timeline({onComplete: this.clearOldSymbolsAndCreateNewOnes.bind(this)});
+
+		// Little randomization to order the tiles drop away
+		if (Math.random() > 0.49)
+			this.symbols.reverse();
+
 		this.symbols.forEach((symbol) =>
 		{
 			timeline.to(symbol, {
 				delay: 0.1 + (0.025 * this.reelNumber),
 				duration: 0.3,
+				rotation: (Math.random()-Math.random()), // Slight rotation for visual collapse feel
 				y: this.core.getApp().renderer.height + symbol.height,
 				ease: Power1.easeIn,
-			});
+			}, '<25%');
 		});
 
 	}
 
 	private clearOldSymbolsAndCreateNewOnes(): void
 	{
+		// Remove old symbols from the stage and from the array, then go fetch what the new ones should be from the core and move the chain along
 		this.clearOldSymbols();
-		this.reelResult = this.core.generateNewReelResult();
+		this.reelResult = this.core.getReelManager().generateNewReelResult();
 		this.populateNewSymbols();
 		this.animateNewSymbolsIn();
 	}
 
 	private animateNewSymbolsIn(): void
 	{
+		// Drop in the new symbols, fairly uniform drop for predictability, check if we're the last reel to animate
 		const timeline = gsap.timeline({onComplete: this.checkIfLastReelAndResetButtonState.bind(this)});
 		this.symbols.reverse().forEach((symbol) =>
 		{
@@ -97,13 +107,14 @@ export default class Reel extends Container {
 				onComplete: () => {
 					this.playRandomReelStopSound();
 				},
-			}, '<50%');
+			}, '<60%');
 		});
 
 	}
 
 	private checkIfLastReelAndResetButtonState(): void
 	{
+		// Just check if we're the final reel and if so the full spin animation has completed
 		if (this.reelNumber === (this.core.getNumReels() - 1))
 		{
 			this.core.resetSpinButton();
