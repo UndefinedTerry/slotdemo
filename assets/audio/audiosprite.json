@@ -1,9 +1,9 @@
 {
   "src": [
-    "sounds/audiosprite.ogg",
-    "sounds/audiosprite.m4a",
-    "sounds/audiosprite.mp3",
-    "sounds/audiosprite.ac3"
+    "assets/audio/audiosprite.ogg",
+    "assets/audio/audiosprite.m4a",
+    "assets/audio/audiosprite.mp3",
+    "assets/audio/audiosprite.ac3"
   ],
   "sprite": {
     "Reel_Stop_1": [0, 405.98639455782313],
