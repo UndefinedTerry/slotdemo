@@ -1,19 +1,21 @@
-import {Application, Container, Loader} from 'pixi.js';
+import {Application, Container, Graphics, Loader} from 'pixi.js';
 import {Howl} from 'howler';
 // eslint-disable-next-line import/extensions
 import * as AudioData from '../assets/audio/audiosprite.json';
 import Reel from './Reel';
+import SpinButton from './SpinButton';
 
 export default class Core
 {
 	private numUniqueSymbols = 8;
+	private numReels = 5;
 
 	private app: Application;
 	private loader: Loader = Loader.shared;
 	private howl: Howl;
 	private reelsArray: Array<Reel> = [];
 	private reelsContainer: Container = new Container;
-	private reelResults: Array<Array<number>> = [];
+	private spinButton: SpinButton | any;
 
 	constructor(app: Application)
 	{
@@ -29,16 +31,16 @@ export default class Core
 
 	public getApp(): Application {return this.app;}
 	public getNumUniqueSymbols(): number {return this.numUniqueSymbols;}
-	public getReelResult(reel: number): Array<number> {return this.reelResults[reel];}
+	public getNumReels(): number {return this.numReels;}
+	public getHowl():Howl {return this.howl;}
 
 	private loadTextures(): void {
 		this.loader.add('atlas', '../assets/images/atlas.json').load(this.onAssetsLoaded.bind(this));
-
 	}
 
 	private onAssetsLoaded() {
-		this.generateAllNewReelResults();
 		this.createInitialReels();
+		this.createSpinButton();
 	}
 
 	private createInitialReels(): void {
@@ -54,17 +56,20 @@ export default class Core
 	private scaleAndAddReelsContainer(): void {
 		this.reelsContainer.scale.set((this.app.renderer.width / this.reelsContainer.width));
 		this.app.stage.addChild(this.reelsContainer);
+		this.reelsContainer.mask = this.createReelsMask();
 	}
 
-	private generateAllNewReelResults()
+	private createReelsMask() : Graphics
 	{
-		for (let i=0; i< 5; i++)
-		{
-			this.reelResults.push(this.generateNewReelResult());
-		}
+		const mask = new Graphics();
+		mask.beginFill(0xff0000);
+		mask.drawRect(0, 0, this.getApp().renderer.width, this.reelsContainer.height);
+		mask.endFill();
+		mask.cacheAsBitmap = true;
+		return mask;
 	}
 
-	private generateNewReelResult()
+	public generateNewReelResult(): Array<number>
 	{
 		const newReelResult: Array<number> = [];
 		for (let i = 0; i < 3; i++)
@@ -72,5 +77,32 @@ export default class Core
 			newReelResult.push(Math.floor(Math.random() * this.getNumUniqueSymbols() + 1));
 		}
 		return newReelResult;
+	}
+
+	private createSpinButton()
+	{
+		this.spinButton = new SpinButton();
+		this.spinButton.setAsNormal();
+		this.spinButton.anchor.set(0.5);
+		this.spinButton.position.y = this.app.renderer.height - (this.spinButton.height/2);
+		this.spinButton.position.x = (this.app.renderer.width/2);
+		this.app.stage.addChild(this.spinButton);
+		this.spinButton.on('pointerup', () =>{
+			if (this.spinButton.getIsEnabled())
+				this.doSpinButtonPressed();
+		});
+	}
+
+	private doSpinButtonPressed()
+	{
+		this.howl.play('Start_Button');
+		this.spinButton.setIsEnabled(false);
+		this.reelsArray.forEach((reel) => {
+			reel.animateCurrentSymbolsOut();
+		})
+	}
+
+	public resetSpinButton() {
+		this.spinButton.setIsEnabled(true);
 	}
 }

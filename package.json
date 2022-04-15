@@ -9,6 +9,7 @@
   "dependencies": {
     "eslint-plugin-import": "^2.25.4",
     "fontfaceobserver": "^2.1.0",
+    "gsap": "^3.10.3",
     "howler": "^2.2.3",
     "pixi-actions": "^1.0.7",
     "pixi-filters": "^4.1.6",
