@@ -104,9 +104,9 @@ export default class Reel extends Container {
 				angle: 0,
 				ease: Power1.easeInOut,
 				onComplete: () => {
-					this.playRandomReelStopSound();
+					this.playReelStopSound();
 				},
-			}, '<60%');
+			}, '<200%');
 		});
 
 	}
@@ -120,10 +120,9 @@ export default class Reel extends Container {
 		}
 	}
 
-	private playRandomReelStopSound(): void
+	private playReelStopSound(): void
 	{
-		const id = Math.floor(Math.random() * 5 + 1);
-		this.core.getHowl().play('Reel_Stop_' + id);
+		this.core.getHowl().play('Reel_Stop_' + (this.reelNumber+1));
 	}
 
 	private clearOldSymbols(): void
