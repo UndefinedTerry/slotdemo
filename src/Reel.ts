@@ -14,7 +14,7 @@ export default class Reel extends Container {
 		super();
 		this.core = core;
 		this.reelResult = core.getReelManager().generateNewReelResult();
-		this.populateInitialSymbols();
+		this.populateSymbolsAndAddToStage();
 		this.position.x = reelId * this.width;
 		this.reelNumber = reelId;
 	}
@@ -41,9 +41,9 @@ export default class Reel extends Container {
 
 	}
 
-	private populateInitialSymbols(): void
+	private populateSymbolsAndAddToStage(): void
 	{
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < this.core.getSymbolsPerReel(); i++) {
 			const symbol: Sprite = new Sprite(this.getReelSymbolTexture(i));
 			this.positionAndAnchorSymbol(symbol, i);
 			this.symbols.push(symbol);
@@ -53,19 +53,10 @@ export default class Reel extends Container {
 
 	private populateNewSymbols(): void
 	{
-		for (let i = 0; i < 3; i++)
-		{
-			const symbol: Sprite = new Sprite(this.getReelSymbolTexture(i));
-			this.positionAndAnchorSymbol(symbol, i);
-			this.positionAsNewSymbol(symbol);
-			this.symbols.push(symbol);
-			this.addChild(symbol);
-		}
-	}
-
-	private positionAsNewSymbol(symbol: Sprite): void
-	{
-		symbol.position.y -= this.core.getApp().renderer.height;
+		this.populateSymbolsAndAddToStage();
+		this.symbols.forEach((symbol) => {
+			symbol.position.y -= this.core.getApp().renderer.height;
+		});
 	}
 
 	private positionAndAnchorSymbol(symbol: Sprite, i: number):void
@@ -104,9 +95,9 @@ export default class Reel extends Container {
 				angle: 0,
 				ease: Power1.easeInOut,
 				onComplete: () => {
-					this.playRandomReelStopSound();
+					this.core.getHowl().play(`Reel_Stop_${this.reelNumber+1}`);
 				},
-			}, '<60%');
+			}, '<200%');
 		});
 
 	}
@@ -118,12 +109,6 @@ export default class Reel extends Container {
 		{
 			this.core.resetSpinButton();
 		}
-	}
-
-	private playRandomReelStopSound(): void
-	{
-		const id = Math.floor(Math.random() * 5 + 1);
-		this.core.getHowl().play('Reel_Stop_' + id);
 	}
 
 	private clearOldSymbols(): void

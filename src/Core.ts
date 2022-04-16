@@ -10,6 +10,7 @@ export default class Core
 	// Constants - Only a couple so might as well keep them here
 	private numUniqueSymbols = 8;
 	private numReels = 5;
+	private symbolsPerReel = 3;
 
 	private loader: Loader = Loader.shared;
 
@@ -32,6 +33,7 @@ export default class Core
 	public getApp(): Application {return this.app;}
 	public getNumUniqueSymbols(): number {return this.numUniqueSymbols;}
 	public getNumReels(): number {return this.numReels;}
+	public getSymbolsPerReel(): number {return this.symbolsPerReel;}
 	public getHowl(): Howl {return this.howl;}
 	public resetSpinButton(): void {this.spinButtonManager.getSpinButton().setIsEnabled(true);}
 	public getReelManager(): ReelManager {return this.reelManager}
