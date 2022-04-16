@@ -28,9 +28,9 @@ export default class ReelManager {
 
 	public generateNewReelResult(): Array<number>
 	{
-		// Just generate 3 new random numbers
+		// Just generate new random numbers
 		const newReelResult: Array<number> = [];
-		for (let i = 0; i < 3; i++)
+		for (let i = 0; i < this.core.getSymbolsPerReel(); i++)
 		{
 			newReelResult.push(Math.floor(Math.random() * this.core.getNumUniqueSymbols() + 1));
 		}
